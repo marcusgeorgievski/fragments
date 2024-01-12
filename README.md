@@ -39,9 +39,9 @@ Cloud-based microservice for a Canadian manufacturing company to manage diverse 
 
 ## Author
 
-👤 Marcus Georgievski
-📧 mgeorgievski4@myseneca.ca
-💻 [marcusgeorgievski.com](https://marcusgeorgievski.com)
+👤 Marcus Georgievski \
+📧 mgeorgievski4@myseneca.ca \
+💻 [marcusgeorgievski.com](https://marcusgeorgievski.com) 
 
 ## Version History
 
