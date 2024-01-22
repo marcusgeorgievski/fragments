@@ -30,18 +30,18 @@ Cloud-based microservice for a Canadian manufacturing company to manage diverse 
 
 ### Scripts
 
-| Script          | Console Output                                                               | Description                                                        |
-| --------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| `npm run start` | `node src/server.js`                                                         | Starts the server using Node.js                                    |
-| `npm run dev`   | `LOG_LEVEL=debug nodemon ./src/server.js --watch src`                        | Starts the server in development mode with the debug logging level |
-| `npm run debug` | `LOG_LEVEL=debug nodemon --inspect=0.0.0.0:9229 ./src/server.js --watch src` | Starts the server in debug mode with an inspector                  |
-| `npm run lint`  | `eslint --config .eslintrc.js \"./src/**/*.js\"`                             | Lints the JavaScript files in the `src` directory                  |
+| Script          | Console Output                                                              | Description                                                        |
+| --------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `npm run start` | `node src/index.js`                                                         | Starts the server using Node.js                                    |
+| `npm run dev`   | `LOG_LEVEL=debug nodemon ./src/index.js --watch src`                        | Starts the server in development mode with the debug logging level |
+| `npm run debug` | `LOG_LEVEL=debug nodemon --inspect=0.0.0.0:9229 ./src/index.js --watch src` | Starts the server in debug mode with an inspector                  |
+| `npm run lint`  | `eslint --config .eslintrc.js \"./src/**/*.js\"`                            | Lints the JavaScript files in the `src` directory                  |
 
 ## Author
 
 👤 Marcus Georgievski \
 📧 mgeorgievski4@myseneca.ca \
-💻 [marcusgeorgievski.com](https://marcusgeorgievski.com) 
+💻 [marcusgeorgievski.com](https://marcusgeorgievski.com)
 
 ## Version History
 
