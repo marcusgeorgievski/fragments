@@ -7,9 +7,6 @@ const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
 
-// author and version from our package.json file
-const { author, version } = require('../package.json');
-
 const logger = require('./logger');
 const pino = require('pino-http')({
   // Use our default logger instance, which is already configured
@@ -26,32 +23,9 @@ app.use(helmet()); // Use helmetjs security middleware
 app.use(cors()); // Use CORS middleware so we can make requests across origins
 app.use(compression()); // Use gzip/deflate compression middleware
 
-// Simple health check route
-// Server running = 200 OK. Else, server isn't healthy
-app.get('/', (req, res) => {
-  // Clients shouldn't cache this response (always request it fresh)
-  // See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching#controlling_caching
-  res.setHeader('Cache-Control', 'no-cache');
+// Define routes
 
-  // Send a 200 'OK' response with info about our repo
-  res.status(200).json({
-    status: 'ok',
-    author,
-    githubUrl: 'https://github.com/marcusgeorgievski/fragments',
-    version,
-  });
-});
-
-// Add 404 middleware to handle any requests for resources that can't be found
-app.use((req, res) => {
-  res.status(404).json({
-    status: 'error',
-    error: {
-      message: 'not found',
-      code: 404,
-    },
-  });
-});
+app.use('/', require('./routes'));
 
 // Add error-handling middleware to deal with anything else
 // eslint-disable-next-line no-unused-vars
