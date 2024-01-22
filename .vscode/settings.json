@@ -5,7 +5,7 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll": true
+    "source.fixAll": "explicit" // switches from 'true' to 'explicit' by itself
   },
   "files.eol": "\n",
   "files.insertFinalNewline": true

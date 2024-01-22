@@ -2,14 +2,9 @@
  * Starts the server.
  */
 
-// We want to gracefully shutdown our server
-const stoppable = require('stoppable');
-
-// Get our logger instance
-const logger = require('./logger');
-
-// Get our express app instance
-const app = require('./app');
+const stoppable = require('stoppable'); // We want to gracefully shutdown our server
+const logger = require('./logger'); // Get our logger instance
+const app = require('./app'); // Get our express app instance
 
 // Get the desired port from the process' environment. Default to `8080`
 const port = parseInt(process.env.PORT || '8080', 10);
@@ -22,7 +17,7 @@ if (process.env.LOG_LEVEL === 'debug') {
 // Start a server listening on this port
 const server = stoppable(
   app.listen(port, () => {
-    // Log a message that the server has started, and which port it's using.
+    // Log server start and port
     logger.info(`Server started on port ${port}`);
   })
 );
