@@ -14,7 +14,7 @@ Cloud-based microservice for a Canadian manufacturing company to manage diverse 
 ## Installation
 
 1. Clone repository
-2. Run `npm ci` _(recommended)_ to install dependencies
+2. Run `npm i` to install dependencies
 3. Refer to [Scripts](#scripts) to get started
 
 ## Config
@@ -44,6 +44,15 @@ Cloud-based microservice for a Canadian manufacturing company to manage diverse 
 💻 [marcusgeorgievski.com](https://marcusgeorgievski.com)
 
 ## Version History
+
+### [0.0.2] - 2024-01-22
+
+- Secured routes with auth middleware
+  - passport.js
+  - cognito
+  - http bearer
+- Initial `/v1/fragments` route
+- Reorganized project structure
 
 ### [0.0.1] - 2024-01-12
 
