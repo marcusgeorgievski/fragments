@@ -30,15 +30,15 @@ Cloud-based microservice for a Canadian manufacturing company to manage diverse 
 
 ### Scripts
 
-| Script               | Console Output                                                              | Description                                                        |
-| -------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| `npm run start`      | `node src/index.js`                                                         | Starts the server using Node.js                                    |
-| `npm run dev`        | `LOG_LEVEL=debug nodemon ./src/index.js --watch src`                        | Starts the server in development mode with the debug logging level |
-| `npm run debug`      | `LOG_LEVEL=debug nodemon --inspect=0.0.0.0:9229 ./src/index.js --watch src` | Starts the server in debug mode with an inspector                  |
-| `npm run lint`       | `eslint --config .eslintrc.js \"./src/**/*.js\`                             | Lints the JavaScript files in the `src` directory                  |
-| `npm run test`       | `jest -c jest.config.js --runInBand --"`                                    | Run tests one-by-one                                               |
-| `npm run test:watch` | `jest -c jest.config.js --runInBand --watch --`                             | Run tests, and re-run on file changes                              |
-| `npm run coverage`   | `jest -c jest.config.js --runInBand --coverage`                             | Run tests and collect test coverage information                    |
+| Script               | Console Output                                                                | Description                                                         |
+| -------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| `npm run start`      | `node src/index.js`                                                           | Starts the server using Node.js                                     |
+| `npm run dev`        | `LOG_LEVEL=debug nodemon ./src/index.js --watch src`                          | Starts the server in development mode with the debug logging level  |
+| `npm run debug`      | `LOG_LEVEL=debug nodemon --inspect=0.0.0.0:9229 ./src/index.js --watch src`   | Starts the server in debug mode with an inspector                   |
+| `npm run lint`       | `"lint": "eslint --config .eslintrc.js \"./src/**/*.js\" \"tests/**/*.js\"",` | Lints the .js and .test.js files in the `src` and `tests` directory |
+| `npm run test`       | `jest -c jest.config.js --runInBand --"`                                      | Run tests one-by-one                                                |
+| `npm run test:watch` | `jest -c jest.config.js --runInBand --watch --`                               | Run tests, and re-run on file changes                               |
+| `npm run coverage`   | `jest -c jest.config.js --runInBand --coverage`                               | Run tests and collect test coverage information                     |
 
 ## Author
 
