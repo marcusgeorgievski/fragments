@@ -6,6 +6,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
+const { createErrorResponse } = require('./response');
 
 const logger = require('./logger');
 const pino = require('pino-http')({
@@ -34,6 +35,14 @@ app.use(passport.initialize());
 
 app.use('/', require('./routes'));
 
+// eslint-disable-next-line no-unused-vars
+app.use((req, res) => {
+  // console.log('\n\n\n\n', req.body.name);
+  const error = new Error('cannot find the requested resource');
+  error.status = 404;
+  throw error;
+});
+
 // Add error-handling middleware to deal with anything else
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
@@ -46,14 +55,7 @@ app.use((err, req, res, next) => {
   if (status > 499) {
     logger.error({ err }, `Error processing request`);
   }
-
-  res.status(status).json({
-    status: 'error',
-    error: {
-      message,
-      code: status,
-    },
-  });
+  res.status(status).json(createErrorResponse(status, message));
 });
 
 // Export our `app` so we can access it in server.js
