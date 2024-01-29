@@ -51,7 +51,7 @@ Cloud-based microservice for a Canadian manufacturing company to manage diverse 
 ### [0.0.3] - 2024-01-26
 
 - Added github CI workflows
-  - eslint
+- Added unit testing with jest
 
 ### [0.0.2] - 2024-01-22
 
