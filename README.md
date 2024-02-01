@@ -48,12 +48,18 @@ Cloud-based microservice for a Canadian manufacturing company to manage diverse 
 
 ## Version History
 
-### [0.0.3] - 2024-01-26
+### [0.0.1]
+
+##### 2024-02-01
+
+- Setup EC2 instance
+
+##### 2024-01-26
 
 - Added github CI workflows
 - Added unit testing with jest
 
-### [0.0.2] - 2024-01-22
+##### 2024-01-22
 
 - Secured routes with auth middleware
   - passport.js
@@ -62,7 +68,7 @@ Cloud-based microservice for a Canadian manufacturing company to manage diverse 
 - Initial `/v1/fragments` route
 - Reorganized project structure
 
-### [0.0.1] - 2024-01-12
+##### 2024-01-12
 
 - Initial Release
 - **Setup:** express, pino logger, eslint, prettier, npm scripts
