@@ -207,4 +207,5 @@ class Fragment {
   }
 }
 
+// export the Fragment class
 module.exports.Fragment = Fragment;
