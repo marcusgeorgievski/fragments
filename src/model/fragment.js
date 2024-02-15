@@ -3,7 +3,7 @@
 const { randomUUID, createHash } = require('crypto');
 // Use https://www.npmjs.com/package/content-type to create/parse Content-Type headers
 const contentType = require('content-type');
-const { logger } = require('../logger');
+const logger = require('../logger');
 
 // Functions for working with fragment metadata/data using our DB
 const {

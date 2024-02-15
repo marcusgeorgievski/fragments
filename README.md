@@ -48,7 +48,14 @@ Cloud-based microservice for a Canadian manufacturing company to manage diverse 
 
 ## Version History
 
-### [0.0.4] - 2024-12-06
+### [0.0.5] - 2024-02-13
+
+- `POST /v1/fragments`
+- `GET /v1/fragments`
+- `GET /v1/fragments/:id`
+- `Updated testing suite`
+
+### [0.0.4] - 2024-02-06
 
 - Setup EC2 instance
 

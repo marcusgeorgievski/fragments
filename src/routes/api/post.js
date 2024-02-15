@@ -12,6 +12,8 @@ module.exports = async (req, res) => {
     const { type } = contentType.parse(req.get('Content-Type'));
     const size = Number(req.headers['content-length']);
 
+    console.log('zxx', req.user);
+
     const fragment = new Fragment({
       ownerId: req.user,
       type,
