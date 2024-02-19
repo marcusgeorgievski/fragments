@@ -48,6 +48,10 @@ Cloud-based microservice for a Canadian manufacturing company to manage diverse 
 
 ## Version History
 
+### [0.0.6] - 2024-02-13
+
+- Simple Docker configuration
+
 ### [0.0.5] - 2024-02-13
 
 - `POST /v1/fragments`
