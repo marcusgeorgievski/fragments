@@ -6,6 +6,8 @@ Cloud-based microservice for a Canadian manufacturing company to manage diverse 
 
 - [Installation](#installation)
 - [Usage](#usage)
+  - [EC2](#ec2)
+  - [Docker](#docker)
 - [Config](#config)
   - [Scripts](#scripts)
 - [Author](#author)
@@ -27,6 +29,50 @@ Cloud-based microservice for a Canadian manufacturing company to manage diverse 
 | `.eslintrc.js`          | Static code analysis tool |
 
 ## Usage
+
+### EC2
+
+1. Ensure EC2 instance is running
+
+2. Connect to remote SSH server
+
+```bash
+ssh -i ~/.ssh/ccp555-key-pair.pem ec2-user@<public-dns>
+```
+
+3. Create a _tarball_ of project's source code
+
+```bash
+npm pack
+```
+
+4. Transfer file from local to remote system
+
+```bash
+scp -i ~/.ssh/ccp555-key-pair.pem fragments-0.0.X.tgz ec2-user@<public-dns>:
+```
+
+5. Unpack tarball on remote server
+
+```bash
+tar -xvzf fragments-0.0.X.tgz
+```
+
+6. Start application via Docker (see below) or `npm start`
+
+### Docker
+
+1. Build docker image
+
+```bash
+docker build -t fragments:latest .
+```
+
+2. Run docker container in detached mode
+
+```bash
+docker run --rm --name fragments --env-file <env-file> [-e LOG_LEVEL=debug] -p 8080:8080 -d fragments:latest
+```
 
 ### Scripts
 
