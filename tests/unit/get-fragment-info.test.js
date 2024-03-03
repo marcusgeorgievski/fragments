@@ -2,9 +2,11 @@ const request = require('supertest');
 
 const app = require('../../src/app');
 
-describe('GET /v1/fragments/:id', () => {
+describe('GET /v1/fragments/:id/info', () => {
   test('user can create fragment then get by id', async () => {
-    const data = Buffer.from('Hello');
+    const text = 'Hello';
+
+    const data = Buffer.from(text);
 
     const res = await request(app)
       .post('/v1/fragments')
@@ -16,9 +18,10 @@ describe('GET /v1/fragments/:id', () => {
     const result = res.body.fragment;
 
     const res2 = await request(app)
-      .get('/v1/fragments/' + result.id)
+      .get('/v1/fragments/' + result.id + '/info')
       .auth('user1@email.com', 'password1');
+    console.log(res2.body);
 
-    expect(res2.text).toBe('Hello');
+    expect(res2.body.fragment.id).toBe(result.id);
   });
 });

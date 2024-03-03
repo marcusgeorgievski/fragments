@@ -21,7 +21,7 @@ module.exports = async (req, res) => {
     await fragment.save();
     await fragment.setData(req.body);
 
-    console.log(fragment.id);
+    // console.log(fragment.id);
 
     logger.info('Created new fragment for ownerId=', req.user, ' with id=', fragment.id);
 
