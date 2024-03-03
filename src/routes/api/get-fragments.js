@@ -8,6 +8,7 @@ const { createSuccessResponse } = require('../../response');
 module.exports = async (req, res) => {
   try {
     let results = null;
+
     results = await Fragment.byUser(req.user, req.query.expand === '1');
 
     logger.info(`Fetched fragments for ownerId=${req.user}`);

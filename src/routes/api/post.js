@@ -21,6 +21,8 @@ module.exports = async (req, res) => {
     await fragment.save();
     await fragment.setData(req.body);
 
+    console.log(fragment.id);
+
     logger.info('Created new fragment for ownerId=', req.user, ' with id=', fragment.id);
 
     // set Location header to the URL of the newly created fragment
