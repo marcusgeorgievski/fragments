@@ -37,7 +37,6 @@ app.use('/', require('./routes'));
 
 // eslint-disable-next-line no-unused-vars
 app.use((req, res) => {
-  // console.log('\n\n\n\n', req.body.name);
   const error = new Error('cannot find the requested resource');
   error.status = 404;
   throw error;

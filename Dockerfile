@@ -1,10 +1,31 @@
-# Dockerfile for the fragments microservice 
+# Optimizations:
+#   - (1) Use the alpine version of the node image to reduce the size of the final image
+#   - (2) Use official node image
+#   - (3) Use specific alpine image version to ensure the same image is used across all environments
+#   - (5) Use multi-stage builds to reduce the size of the final image
+#   - (6) Only install production dependencies
+#   - (9) Use the HEALTHCHECK command to check if the service is running
 
-# Use Node's latest LTS version: 20.11.1
-FROM node:20.11.1
+# Stage 0: install base dependencies
 
-LABEL maintainer="Marcus Georgievski <marcusgeorgievski@outloot.com>" \
+FROM node:21-alpine3.18@sha256:911976032e5e174fdd8f5fb63d7089b09d59d21dba3df2728c716cbb88c7b821 AS dependencies
+
+LABEL maintainer="Marcus Georgievski <marcusgeorgievski@outlook.com>" \
       description="Fragments node.js microservice"
+
+ENV NODE_ENV=production
+
+WORKDIR /app
+
+COPY package*.json .
+
+RUN npm ci --only=production
+
+###############################################################
+
+# Stage 1: start the app
+
+FROM node:21-alpine3.18@sha256:911976032e5e174fdd8f5fb63d7089b09d59d21dba3df2728c716cbb88c7b821 AS production
 
 # Define environment variables
 # Port:
@@ -19,18 +40,13 @@ ENV PORT=8080 \
     NPM_CONFIG_LOGLEVEL=warn \
     NPM_CONFIG_COLOR=false
 
-# Use /app as our working directory
+RUN apk --no-cache add curl
+
 WORKDIR /app
 
-# Copy the package.json and package-lock.json files into the working dir (/app).
-COPY package*.json ./
+COPY --from=dependencies /app .
 
-# Install node dependencies defined in package-lock.json
-RUN npm install
-
-# Copy src to /app/src/
-COPY ./src ./src
-
+COPY . .
 # Copy our HTPASSWD file for basic auth
 COPY ./tests/.htpasswd ./tests/.htpasswd
 
@@ -39,3 +55,10 @@ CMD npm start
 
 # We run our service on port 8080
 EXPOSE 8080
+
+
+HEALTHCHECK --interval=30s \
+            --timeout=30s \
+            --start-period=10s \
+            --retries=2 \
+            CMD curl --fail localhost:${PORT} || exit 1
