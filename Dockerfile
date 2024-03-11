@@ -40,7 +40,7 @@ ENV PORT=8080 \
     NPM_CONFIG_LOGLEVEL=warn \
     NPM_CONFIG_COLOR=false
 
-RUN apk --no-cache add curl
+RUN apk --no-cache add curl=8.2.0
 
 WORKDIR /app
 
@@ -51,7 +51,7 @@ COPY . .
 COPY ./tests/.htpasswd ./tests/.htpasswd
 
 # Start the container by running our server
-CMD npm start
+CMD ["npm", "start"]
 
 # We run our service on port 8080
 EXPOSE 8080
