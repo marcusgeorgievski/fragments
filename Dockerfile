@@ -40,7 +40,7 @@ ENV PORT=8080 \
     NPM_CONFIG_LOGLEVEL=warn \
     NPM_CONFIG_COLOR=false
 
-RUN apk --no-cache add curl=8.6.0-r0
+RUN apk --no-cache --update add curl=8.6.0-r0
 
 WORKDIR /app
 
