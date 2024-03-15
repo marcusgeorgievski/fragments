@@ -38,5 +38,29 @@ describe('GET /v1/fragments', () => {
     expect(res2.body.fragments.length).toBe(2);
   });
 
+  test('expand has additional keys ', async () => {
+    await request(app)
+      .post('/v1/fragments')
+      .auth('user1@email.com', 'password1')
+      .send('hello')
+      .set('Content-Type', 'text/plain')
+      .set('Content-Length', 'hello'.length);
+
+    const getExpandedRes = await request(app)
+      .get(`/v1/fragments`)
+      .query({ expand: 1 })
+      .auth('user1@email.com', 'password1');
+
+    const fragment = getExpandedRes.body.fragments[0];
+
+    // Ensure the expanded fragment has the correct keys
+    expect('ownerId' in fragment).toBe(true);
+    expect('created' in fragment).toBe(true);
+    expect('updated' in fragment).toBe(true);
+    expect('size' in fragment).toBe(true);
+    expect('type' in fragment).toBe(true);
+    expect('id' in fragment).toBe(true);
+  });
+
   // TODO: we'll need to add tests to check the contents of the fragments array later
 });

@@ -1,10 +1,11 @@
 # Optimizations:
-#   - (1) Use the alpine version of the node image to reduce the size of the final image
-#   - (2) Use official node image
-#   - (3) Use specific alpine image version to ensure the same image is used across all environments
-#   - (5) Use multi-stage builds to reduce the size of the final image
-#   - (6) Only install production dependencies
-#   - (9) Use the HEALTHCHECK command to check if the service is running
+#   - Use the alpine version of the node image to reduce the size of the final image
+#   - Use official node image
+#   - Use specific alpine image version to ensure the same image is used across all environments
+#   - Use multi-stage builds to reduce the size of the final image
+#   - Only install production dependencies
+#   - Use the HEALTHCHECK command to check if the service is running
+#   - Use a non-root user to run the service
 
 # Stage 0: install base dependencies
 
