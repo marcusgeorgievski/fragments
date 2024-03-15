@@ -6,6 +6,7 @@
 #   - Only install production dependencies
 #   - Use the HEALTHCHECK command to check if the service is running
 #   - Use a non-root user to run the service
+#   - Use dumb-init to handle signals and reaping zombie processes
 
 # Stage 0: install base dependencies
 
@@ -14,7 +15,7 @@ FROM node:21-alpine3.18@sha256:911976032e5e174fdd8f5fb63d7089b09d59d21dba3df2728
 LABEL maintainer="Marcus Georgievski <marcusgeorgievski@outlook.com>" \
       description="Fragments node.js microservice"
 
-ENV NODE_ENV=production
+ENV NODE_ENV production
 
 WORKDIR /app
 
@@ -41,8 +42,12 @@ ENV PORT=8080 \
     NPM_CONFIG_LOGLEVEL=warn \
     NPM_CONFIG_COLOR=false
 
-  # Create new user group and 
-RUN apk --no-cache --update add curl=8.5.0-r0 && \
+# - Get curl
+# - Get dumb-init
+# - Create new user group and 
+RUN apk --no-cache --update add \
+    curl=8.5.0-r0 \
+    dumb-init=1.2.5-r3 && \
     addgroup -S appgroup && \
     adduser -S appuser -G appgroup 
 
@@ -59,7 +64,7 @@ COPY ./tests/.htpasswd ./tests/.htpasswd
 USER appuser
 
 # Start the container by running our server
-CMD ["npm", "start"]
+CMD ["dumb-init", "npm", "start"]
 
 # We run our service on port 8080
 EXPOSE 8080
