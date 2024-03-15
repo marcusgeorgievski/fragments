@@ -15,7 +15,7 @@ module.exports = async (req, res) => {
     // Disallow unsupported types
     if (!isSupportedType) {
       logger.error('Unsupported type:', type);
-      res.status(200).json(createErrorResponse(415, 'Unsupported type: ' + type));
+      res.status(415).json(createErrorResponse(415, 'Unsupported type: ' + type));
       return;
     }
 

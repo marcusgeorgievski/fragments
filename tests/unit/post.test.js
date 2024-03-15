@@ -1,5 +1,5 @@
 const request = require('supertest');
-// const crypto = require('crypto');
+const crypto = require('crypto');
 
 const app = require('../../src/app');
 
@@ -14,7 +14,7 @@ describe('POST /v1/fragments', () => {
       .set('Content-Type', 'text/plain')
       .set('Content-Length', data.length);
 
-    expect(res.statusCode).toBe(200);
+    expect(res.statusCode).toBe(201);
   });
 
   test('invalid user not authorized and returns 401', async () => {
@@ -30,18 +30,27 @@ describe('POST /v1/fragments', () => {
     expect(res.statusCode).toBe(401);
   });
 
-  // test('correct owner id returned from post response', async () => {
-  //   const res = await request(app)
-  //     .post('/v1/fragments')
-  //     .auth('user1@email.com', 'password1')
-  //     .send('hello')
-  //     .set('Content-Type', 'text/plain')
-  //     .set('Content-Length', 'hello'.length);
+  test('correct owner id returned from post response', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('user1@email.com', 'password1')
+      .send('hello')
+      .set('Content-Type', 'text/plain')
+      .set('Content-Length', 'hello'.length);
 
-  //   console.log('zx', res.body.fragment);
+    expect(res.body.fragment.ownerId).toBe(
+      crypto.createHash('sha256').update('user1@email.com').digest('hex')
+    );
+  });
 
-  //   expect(res.body.fragment.ownerId).toBe(
-  //     crypto.createHash('sha256').update('user1@email.com').digest('hex')
-  //   );
-  // });
+  test('invalid type returns HTTP 415 status', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('user1@email.com', 'password1')
+      .send('hello')
+      .set('Content-Type', 'audio/mpeg')
+      .set('Content-Length', 'hello'.length);
+
+    expect(res.statusCode).toBe(415);
+  });
 });
