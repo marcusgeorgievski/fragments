@@ -40,7 +40,10 @@ ENV PORT=8080 \
     NPM_CONFIG_LOGLEVEL=warn \
     NPM_CONFIG_COLOR=false
 
-RUN apk --no-cache --update add curl=8.5.0-r0
+  # Create new user group and 
+RUN apk --no-cache --update add curl=8.5.0-r0 && \
+    addgroup -S appgroup && \
+    adduser -S appuser -G appgroup 
 
 WORKDIR /app
 
@@ -49,6 +52,10 @@ COPY --from=dependencies /app .
 COPY . .
 # Copy our HTPASSWD file for basic auth
 COPY ./tests/.htpasswd ./tests/.htpasswd
+
+
+# Set user group when running image
+USER appuser
 
 # Start the container by running our server
 CMD ["npm", "start"]
