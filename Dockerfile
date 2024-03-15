@@ -47,7 +47,7 @@ ENV PORT=8080 \
 # - Create new user group and 
 RUN apk --no-cache --update add \
     curl=8.5.0-r0 \
-    dumb-init=1.2.5-r3 && \
+    dumb-init=1.2.5-r2 && \
     addgroup -S appgroup && \
     adduser -S appuser -G appgroup 
 
