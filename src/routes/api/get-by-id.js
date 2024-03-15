@@ -1,21 +1,21 @@
 const { Fragment } = require('../../model/fragment');
-// const { createSuccessResponse } = require('../../response');
 const logger = require('../../logger');
 
-/**
- * Get a fragment by its id
- */
+// Get a fragment by id
 module.exports = async (req, res) => {
-  const id = req.params.id;
+  // TODO: supported type conversion (415 err)
+  const fragmentId = req.params.id;
+  const ownerId = req.user;
 
   try {
-    const fragment = await Fragment.byId(req.user, id);
-    const result = await fragment.getData();
+    const fragmentMetadata = await Fragment.byId(ownerId, fragmentId);
+    const fragmentData = await fragmentMetadata.getData();
 
-    logger.info(`Fetched fragment by id for ownerId=${req.user} with id=${id}:`);
+    logger.info(`Fetched fragment by id for ownerId=${ownerId} with id=${fragmentId}:`);
 
-    res.status(200).send(result.toString());
+    res.set({ 'Content-Type': fragmentMetadata.type });
+    res.status(200).send(fragmentData.toString());
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(404).json({ error: error.message });
   }
 };

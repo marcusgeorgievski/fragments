@@ -2,18 +2,25 @@ const { createSuccessResponse, createErrorResponse } = require('../../response')
 const logger = require('../../logger');
 const { Fragment } = require('../../model/fragment');
 var contentType = require('content-type');
-// const { randomUUID, createHash } = require('crypto');
 
-/**
- * Create a new fragment for the current user
- */
+// Create a new fragment for the current user
 module.exports = async (req, res) => {
+  const ownerId = req.user;
+  const { type } = contentType.parse(req.get('Content-Type'));
+  const size = Number(req.headers['content-length']);
+
   try {
-    const { type } = contentType.parse(req.get('Content-Type'));
-    const size = Number(req.headers['content-length']);
+    const isSupportedType = Fragment.isSupportedType(type);
+
+    // Disallow unsupported types
+    if (!isSupportedType) {
+      logger.error('Unsupported type:', type);
+      res.status(200).json(createErrorResponse(415, 'Unsupported type: ' + type));
+      return;
+    }
 
     const fragment = new Fragment({
-      ownerId: req.user,
+      ownerId,
       type,
       size,
     });
@@ -21,13 +28,16 @@ module.exports = async (req, res) => {
     await fragment.save();
     await fragment.setData(req.body);
 
-    // console.log(fragment.id);
+    logger.info('Created new fragment for ownerId=', ownerId, ' with id=', fragment.id);
 
-    logger.info('Created new fragment for ownerId=', req.user, ' with id=', fragment.id);
+    const hostUrl =
+      process.env.NODE_ENV === 'development'
+        ? `http://${req.headers.host}`
+        : `https://${req.headers.host}`;
 
-    // set Location header to the URL of the newly created fragment
-    res.set({ Location: `${req.headers.host}/v1/fragments/${fragment.id}` });
-    res.status(200).json(createSuccessResponse({ fragment: fragment }));
+    res.set({ Location: `${hostUrl}/v1/fragments/${fragment.id}` });
+
+    res.status(201).json(createSuccessResponse({ fragment }));
   } catch (error) {
     logger.error('Error creating a new fragment ', error);
     createErrorResponse(res.status(500).json(500, 'Error creating a new fragment ' + error));

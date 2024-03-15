@@ -1,6 +1,6 @@
 // Use crypto.randomUUID() to create unique IDs, see:
 // https://nodejs.org/api/crypto.html#cryptorandomuuidoptions
-const { randomUUID, createHash } = require('crypto');
+const { randomUUID } = require('crypto');
 // Use https://www.npmjs.com/package/content-type to create/parse Content-Type headers
 const contentType = require('content-type');
 const logger = require('../logger');
@@ -36,9 +36,9 @@ class Fragment {
 
     // TODO
     this.id = id || randomUUID();
-    this.ownerId = createHash('sha256').update(ownerId).digest('hex');
-    this.created = created;
-    this.updated = updated;
+    this.ownerId = ownerId;
+    this.created = created || new Date().toISOString();
+    this.updated = updated || new Date().toISOString();
     this.type = type;
     this.size = size;
 
@@ -52,9 +52,12 @@ class Fragment {
    * @returns Promise<Array<Fragment>>
    */
   static async byUser(ownerId, expand = false) {
-    // TODO
-    const hashedOwnerId = createHash('sha256').update(ownerId).digest('hex');
-    return listFragments(hashedOwnerId, expand);
+    try {
+      const fragments = await listFragments(ownerId, expand);
+      return fragments;
+    } catch (error) {
+      throw new Error(`Error finding fragments byUser for ownerId=${ownerId}: ${error.message}`);
+    }
   }
 
   /**
@@ -64,19 +67,15 @@ class Fragment {
    * @returns Promise<Fragment>
    */
   static async byId(ownerId, id) {
-    // TODO
-    let hashedOwnerId = createHash('sha256').update(ownerId).digest('hex');
-
     try {
-      // Read the fragment metadata
-      let fragmentData = await readFragment(hashedOwnerId, id);
+      let fragmentMetadata = await readFragment(ownerId, id);
 
       // If no fragment is found, throw an error
-      if (!fragmentData) {
+      if (!fragmentMetadata) {
         throw new Error(`Fragment not found for ownerId: ${ownerId} and id: ${id}`);
       }
 
-      return fragmentData;
+      return fragmentMetadata;
     } catch (error) {
       // Rethrow with error message
       throw new Error(
@@ -93,8 +92,13 @@ class Fragment {
    */
   static delete(ownerId, id) {
     // TODO
-    const hashedOwnerId = createHash('sha256').update(ownerId).digest('hex');
-    return deleteFragment(hashedOwnerId, id);
+    try {
+      return deleteFragment(ownerId, id);
+    } catch (error) {
+      throw new Error(
+        `Error deleting fragment for ownerId=${ownerId} and id=${id}: ${error.message}`
+      );
+    }
   }
 
   /**
@@ -102,9 +106,14 @@ class Fragment {
    * @returns Promise<void>
    */
   save() {
-    // TODO: save and update the updated date
-    this.updated = new Date().toISOString();
-    return writeFragment(this);
+    try {
+      this.updated = new Date().toISOString();
+      return writeFragment(this);
+    } catch (error) {
+      throw new Error(
+        `Error saving fragment for ownerId=${this.ownerId} and id=${this.id}: ${error.message}`
+      );
+    }
   }
 
   /**
@@ -113,7 +122,20 @@ class Fragment {
    */
   getData() {
     // TODO
-    return readFragmentData(this.ownerId, this.id);
+
+    try {
+      const fragmentData = readFragmentData(this.ownerId, this.id);
+
+      if (!fragmentData) {
+        throw new Error(`Fragment not found for ownerId: ${this.ownerId} and id: ${this.id}`);
+      }
+
+      return fragmentData; // promise
+    } catch (err) {
+      throw new Error(
+        `Error fetching fragment data for ownerId=${this.ownerId} and id=${this.id}: ${err.message}`
+      );
+    }
   }
 
   /**
@@ -122,19 +144,22 @@ class Fragment {
    * @returns Promise<void>
    */
   async setData(data) {
-    // check if data is a buffer
+    try {
+      if (!Buffer.isBuffer(data)) {
+        throw new Error('Data must be a buffer');
+      }
 
-    if (!Buffer.isBuffer(data)) {
-      throw new Error('Data must be a buffer');
+      this.size = data.length;
+      this.updated = new Date().toISOString();
+
+      await writeFragmentData(this.ownerId, this.id, data);
+
+      return;
+    } catch (error) {
+      throw new Error(
+        `Error setting fragment data for ownerId=${this.ownerId} and id=${this.id}: ${error.message}`
+      );
     }
-
-    // Set new size
-    this.size = data.length;
-
-    // Update the updated date
-    this.updated = new Date().toISOString();
-
-    return writeFragmentData(this.ownerId, this.id, data);
   }
 
   /**

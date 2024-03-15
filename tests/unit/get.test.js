@@ -18,6 +18,7 @@ describe('GET /v1/fragments', () => {
     expect(res.body.status).toBe('ok');
     expect(Array.isArray(res.body.fragments)).toBe(true);
   });
+
   test('authenticated users get a fragments array of size 2 after 2 post reqs', async () => {
     await request(app)
       .post('/v1/fragments')

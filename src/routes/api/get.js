@@ -2,19 +2,19 @@ const logger = require('../../logger');
 const { Fragment } = require('../../model/fragment');
 const { createSuccessResponse } = require('../../response');
 
-/**
- * Get a list of fragments for the current user
- */
+// Get a list of fragments for the current user
 module.exports = async (req, res) => {
+  const ownerId = req.user;
+  const expand = req.query.expand == '1';
+
   try {
-    let results = null;
+    const fragments = await Fragment.byUser(ownerId, expand);
 
-    results = await Fragment.byUser(req.user, req.query.expand === '1');
+    logger.info(`Fetched ${fragments.length} fragments for ownerId: ${ownerId}`);
 
-    logger.info(`Fetched fragments for ownerId=${req.user}`);
-
-    res.status(200).json(createSuccessResponse({ fragments: results }));
+    res.status(200).json(createSuccessResponse({ fragments }));
   } catch (error) {
+    logger.info(`Failed to fetch fragments for ownerId: ${ownerId}`);
     res.status(500).json({ error: error.message });
   }
 };
