@@ -187,16 +187,16 @@ class Fragment {
    */
   get formats() {
     const conversionMap = {
-      'text/plain': ['text/plain'],
-      'text/markdown': ['text/markdown', 'text/html', 'text/plain'],
-      'text/html': ['text/html', 'text/plain'],
-      'text/csv': ['.csv', 'text/plain', '.json'],
-      'application/json': ['.json', 'text/plain'],
-      'image/png': ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif'],
-      'image/jpeg': ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif'],
-      'image/webp': ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif'],
-      'image/avif': ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif'],
-      'image/gif': ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif'],
+      'text/plain': ['.txt'],
+      'text/markdown': ['.md', '.html', '.txt'],
+      'text/html': ['.html', '.txt'],
+      'text/csv': ['.csv', '.txt', '.json'],
+      'application/json': ['.json', '.txt'],
+      'image/png': ['.png', '.jpg', '.webp', '.gif', '.avif'],
+      'image/jpeg': ['.png', '.jpg', '.webp', '.gif', '.avif'],
+      'image/webp': ['.png', '.jpg', '.webp', '.gif', '.avif'],
+      'image/avif': ['.png', '.jpg', '.webp', '.gif', '.avif'],
+      'image/gif': ['.png', '.jpg', '.webp', '.gif', '.avif'],
     };
 
     // Extract the media type
@@ -213,15 +213,17 @@ class Fragment {
   static isSupportedType(value) {
     const validTypes = [
       `text/plain`,
+      `text/markdown`,
+      `text/html`,
+      `text/csv`,
+      `application/json`,
       /*
        Currently, only text/plain is supported. Others will be added later.
 
-      `text/markdown`,
-      `text/html`,
-      `application/json`,
       `image/png`,
       `image/jpeg`,
       `image/webp`,
+      `image/avif`,
       `image/gif`,
       */
     ];
