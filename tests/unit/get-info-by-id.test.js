@@ -20,7 +20,6 @@ describe('GET /v1/fragments/:id/info', () => {
     const getRes = await request(app)
       .get('/v1/fragments/' + postResult.id + '/info')
       .auth('user1@email.com', 'password1');
-    console.log(getRes.body);
 
     const getResult = getRes.body.fragment;
 

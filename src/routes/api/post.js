@@ -28,7 +28,7 @@ module.exports = async (req, res) => {
     await fragment.save();
     await fragment.setData(req.body);
 
-    logger.info('Created new fragment for ownerId=', ownerId, ' with id=', fragment.id);
+    logger.info(`Created new fragment for ownerId ${ownerId} with fragment ID ${fragment.id}`);
 
     const hostUrl =
       process.env.NODE_ENV === 'development'

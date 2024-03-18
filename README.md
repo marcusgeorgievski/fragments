@@ -23,55 +23,29 @@ Cloud-based microservice for a Canadian manufacturing company to manage diverse 
 
 | File                    | Description               |
 | ----------------------- | ------------------------- |
-| `.vscode/launch.json`   | VSCode debugger           |
-| `.vscode/settings.json` | Overrides VSCode settings |
+| `.Dockerfile`           |                           |
+| `.jest.config`          |                           |
 | `.prettierrc`           | Code formatting           |
 | `.eslintrc.js`          | Static code analysis tool |
+| `.vscode/launch.json`   | VSCode debugger           |
+| `.vscode/settings.json` | Overrides VSCode settings |
 
 ## Usage
 
 ### EC2
 
-1. Ensure EC2 instance is running
-
-2. Connect to remote SSH server
-
 ```bash
+# Ensure EC2 instance is running
 ssh -i ~/.ssh/ccp555-key-pair.pem ec2-user@<public-dns>
 ```
 
-3. Create a _tarball_ of project's source code
-
-```bash
-npm pack
-```
-
-4. Transfer file from local to remote system
-
-```bash
-scp -i ~/.ssh/ccp555-key-pair.pem fragments-0.0.X.tgz ec2-user@<public-dns>:
-```
-
-5. Unpack tarball on remote server
-
-```bash
-tar -xvzf fragments-0.0.X.tgz
-```
-
-6. Start application via Docker (see below) or `npm start`
-
 ### Docker
 
-1. Build docker image
-
 ```bash
-docker build -t fragments:latest .
-```
+docker build -t marcusgeorgievski/fragments:latest .
 
-2. Run docker container in detached mode
-
-```bash
-docker run --rm --name fragments --env-file <env-file> [-e LOG_LEVEL=debug] -p 8080:8080 -d fragments:latest
+# [-e LOG_LEVEL=debug]
+docker run --rm --name fragments --env-file .env -p 8080:8080 marcusgeorgievski/fragments:latest
 ```
 
 ### Scripts

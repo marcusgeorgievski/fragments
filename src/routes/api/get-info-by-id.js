@@ -4,13 +4,13 @@ const logger = require('../../logger');
 
 // Get a fragment by id
 module.exports = async (req, res) => {
-  const id = req.params.id;
+  const fragmentId = req.params.id;
   const ownerId = req.user;
 
   try {
-    const fragment = await Fragment.byId(ownerId, id);
+    const fragment = await Fragment.byId(ownerId, fragmentId);
 
-    logger.info(`Fetched fragment by id for ownerId=${req.user} with id=${id}:`);
+    logger.info(`Fetched fragment for ownerId ${ownerId} and fragment ID ${fragmentId}`);
 
     res.status(200).send(
       createSuccessResponse({

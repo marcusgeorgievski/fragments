@@ -11,7 +11,7 @@ module.exports = async (req, res) => {
     const fragmentMetadata = await Fragment.byId(ownerId, fragmentId);
     const fragmentData = await fragmentMetadata.getData();
 
-    logger.info(`Fetched fragment by id for ownerId=${ownerId} with id=${fragmentId}:`);
+    logger.info(`Fetched fragment for ownerId ${ownerId} and fragment ID ${fragmentId}`);
 
     res.set({ 'Content-Type': fragmentMetadata.type });
     res.status(200).send(fragmentData.toString());

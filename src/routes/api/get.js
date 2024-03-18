@@ -10,7 +10,7 @@ module.exports = async (req, res) => {
   try {
     const fragments = await Fragment.byUser(ownerId, expand);
 
-    logger.info(`Fetched ${fragments.length} fragments for ownerId: ${ownerId}`);
+    logger.info(`Fetched ${fragments.length} fragments for ownerId ${ownerId}`);
 
     res.status(200).json(createSuccessResponse({ fragments }));
   } catch (error) {
