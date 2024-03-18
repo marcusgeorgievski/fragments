@@ -1,5 +1,5 @@
 const { Fragment } = require('../../model/fragment');
-const { createSuccessResponse } = require('../../response');
+const { createSuccessResponse, createErrorResponse } = require('../../response');
 const logger = require('../../logger');
 
 // Get a fragment by id
@@ -18,6 +18,7 @@ module.exports = async (req, res) => {
       })
     );
   } catch (error) {
-    res.status(404).json({ error: error.message });
+    logger.error(`Failed to fetch fragment for ownerId: ${ownerId} and fragment ID: ${fragmentId}`);
+    res.status(404).json(createErrorResponse(404, error.message));
   }
 };

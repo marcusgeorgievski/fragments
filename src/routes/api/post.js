@@ -15,8 +15,9 @@ module.exports = async (req, res) => {
     // Disallow unsupported types
     if (!isSupportedType) {
       logger.error('Unsupported type:', type);
-      res.status(415).json(createErrorResponse(415, 'Unsupported type: ' + type));
-      return;
+      const error = new Error(`Unsupported type: ${type}`);
+      error.status = 415;
+      throw error;
     }
 
     const fragment = new Fragment({
@@ -36,10 +37,9 @@ module.exports = async (req, res) => {
         : `https://${req.headers.host}`;
 
     res.set({ Location: `${hostUrl}/v1/fragments/${fragment.id}` });
-
     res.status(201).json(createSuccessResponse({ fragment }));
   } catch (error) {
     logger.error('Error creating a new fragment ', error);
-    createErrorResponse(res.status(500).json(500, 'Error creating a new fragment ' + error));
+    res.status(error.status || 500).json(createErrorResponse(error.status || 500, error.message));
   }
 };

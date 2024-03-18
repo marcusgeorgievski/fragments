@@ -60,4 +60,62 @@ describe('GET /v1/fragments/:id', () => {
 
     expect(getExpandedRes.status).toBe(404);
   });
+
+  test('create fragment of markdown type', async () => {
+    const data = '## hello';
+
+    const postRes = await request(app)
+      .post('/v1/fragments')
+      .auth('user1@email.com', 'password1')
+      .send(data)
+      .set('Content-Type', 'text/markdown')
+      .set('Content-Length', data.length);
+
+    const postFragment = postRes.body.fragment;
+
+    const getRes = await request(app)
+      .get(`/v1/fragments/${postFragment.id}`)
+      .auth('user1@email.com', 'password1');
+
+    expect(getRes.status).toBe(200);
+  });
+
+  test('valid markdown to html conversion', async () => {
+    const data = '## hello';
+
+    const postRes = await request(app)
+      .post('/v1/fragments')
+      .auth('user1@email.com', 'password1')
+      .send(data)
+      .set('Content-Type', 'text/markdown')
+      .set('Content-Length', data.length);
+
+    const postFragment = postRes.body.fragment;
+
+    const getRes = await request(app)
+      .get(`/v1/fragments/${postFragment.id}.html`)
+      .auth('user1@email.com', 'password1');
+
+    expect(getRes.text).toBe('<h2>hello</h2>\n');
+    expect(getRes.status).toBe(200);
+  });
+
+  test('invalid markdown to jpeg conversion results in 415', async () => {
+    const data = '## hello';
+
+    const postRes = await request(app)
+      .post('/v1/fragments')
+      .auth('user1@email.com', 'password1')
+      .send(data)
+      .set('Content-Type', 'text/markdown')
+      .set('Content-Length', data.length);
+
+    const postFragment = postRes.body.fragment;
+
+    const getRes = await request(app)
+      .get(`/v1/fragments/${postFragment.id}.jpg`)
+      .auth('user1@email.com', 'password1');
+
+    expect(getRes.status).toBe(415);
+  });
 });
