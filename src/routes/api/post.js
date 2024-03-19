@@ -31,10 +31,7 @@ module.exports = async (req, res) => {
 
     logger.info(`Created new fragment for ownerId ${ownerId} with fragment ID ${fragment.id}`);
 
-    const hostUrl =
-      process.env.NODE_ENV === 'development'
-        ? `http://${req.headers.host}`
-        : `https://${req.headers.host}`;
+    const hostUrl = `${req.secure ? `https://` : `http://`}${req.headers.host}`;
 
     res.set({ Location: `${hostUrl}/v1/fragments/${fragment.id}` });
     res.status(201).json(createSuccessResponse({ fragment }));
