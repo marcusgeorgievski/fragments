@@ -22,12 +22,13 @@ module.exports = async (req, res) => {
 
       logger.info(`Converted ${fragment.mimeType} to ${extToType[ext]}`);
       res.set({ 'Content-Type': extToType[ext] });
-      res.status(200).send(convertedData);
+      const convertedBuffer = Buffer.from(convertedData);
+      res.status(200).send(convertedBuffer);
       return;
     }
 
     res.set({ 'Content-Type': fragment.type });
-    res.status(200).send(fragmentData.toString());
+    res.status(200).send(fragmentData);
   } catch (error) {
     logger.error(`Failed to fetch fragment for ownerId: ${ownerId} and fragment ID: ${fragmentId}`);
     res.status(error.status || 404).json(createErrorResponse(error.status || 404, error.message));
