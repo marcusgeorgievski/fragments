@@ -2,6 +2,7 @@
 
 const express = require('express');
 const { createSuccessResponse } = require('../response');
+const { hostname } = require('os');
 
 // Our authentication middleware
 const { authenticate } = require('../auth');
@@ -31,13 +32,12 @@ router.use(`/v1`, authenticate(), require('./api'));
 router.get('/', (req, res) => {
   // Client's shouldn't cache this response (always request it fresh)
   res.setHeader('Cache-Control', 'no-cache');
-  // Send a 200 'OK' response
   res.status(200).json(
     createSuccessResponse({
       author,
-      // Use your own GitHub URL for this!
       githubUrl: 'https://github.com/marcusgeorgievski/fragments',
       version,
+      hostname: hostname(),
     })
   );
 });
