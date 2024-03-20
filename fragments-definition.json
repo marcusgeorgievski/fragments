@@ -1,9 +1,9 @@
 {
-  "taskDefinitionArn": "arn:aws:ecs:us-east-1:556878954589:task-definition/fragments-task:3",
+  "taskDefinitionArn": "arn:aws:ecs:us-east-1:556878954589:task-definition/fragments-task:5",
   "containerDefinitions": [
     {
       "name": "fragments-container",
-      "image": "556878954589.dkr.ecr.us-east-1.amazonaws.com/fragments:v0.8.5",
+      "image": "556878954589.dkr.ecr.us-east-1.amazonaws.com/fragments:v0.8.7",
       "cpu": 256,
       "memoryReservation": 512,
       "portMappings": [
@@ -52,7 +52,7 @@
   "taskRoleArn": "arn:aws:iam::556878954589:role/LabRole",
   "executionRoleArn": "arn:aws:iam::556878954589:role/LabRole",
   "networkMode": "awsvpc",
-  "revision": 3,
+  "revision": 5,
   "volumes": [],
   "status": "ACTIVE",
   "requiresAttributes": [
@@ -96,7 +96,7 @@
     "cpuArchitecture": "X86_64",
     "operatingSystemFamily": "LINUX"
   },
-  "registeredAt": "2024-03-20T03:52:43.778Z",
+  "registeredAt": "2024-03-20T04:29:36.301Z",
   "registeredBy": "arn:aws:sts::556878954589:assumed-role/voclabs/user3004581=Georgievski,_Marcus",
   "tags": []
 }
