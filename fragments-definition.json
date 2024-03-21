@@ -23,7 +23,7 @@
         },
         {
           "name": "API_URL",
-          "value": "fragments-lb-1388837306.us-east-1.elb.amazonaws.com"
+          "value": "https://fragments.mgeorgievski4.mystudentproject.ca"
         },
         {
           "name": "PORT",
