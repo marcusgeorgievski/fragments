@@ -48,7 +48,9 @@
  * @typedef {Object} PostResponse
  * @property {number} statusCode
  * @property {Object} header
- * @property {SuccessResponseMetadata} body
+ * @property {Object} body
+ * @property {FragmentMetadata} body.fragment
+ * @property {string} body.status
  */
 
 // GET /v1/fragments
@@ -57,7 +59,9 @@
  * @typedef {Object} GetResponse
  * @property {number} statusCode
  * @property {Object} header
- * @property {SuccessResponseArray} body
+ * @property {Object} body
+ * @property {string[]} body.fragments
+ * @property {string} body.status
  */
 
 // GET /v1/fragments?expand=1
@@ -66,7 +70,9 @@
  * @typedef {Object} GetResponse
  * @property {number} statusCode
  * @property {Object} header
- * @property {SuccessResponseMetadataArray} body
+ * @property {Object} body
+ * @property {FragmentMetadata[]} body.fragment
+ * @property {string} body.status
  */
 
 // GET /v1/fragments/:id
@@ -84,7 +90,9 @@
  * @typedef {Object} GetInfoResponse
  * @property {number} statusCode
  * @property {Object} header
- * @property {SuccessResponseMetadata} body
+ * @property {Object} body
+ * @property {FragmentMetadata} body.fragment
+ * @property {string} body.status
  */
 
 // Allows the typedefs to be imported from other files
