@@ -7,6 +7,8 @@ module.exports = async (req, res) => {
   const ownerId = req.user;
   const expand = req.query.expand == '1';
 
+  logger.debug({ ownerId, expand }, 'Fetching fragments by ownerId');
+
   try {
     const fragments = await Fragment.byUser(ownerId, expand);
 

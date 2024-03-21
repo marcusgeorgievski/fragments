@@ -28,6 +28,7 @@ app.use(cors()); // Use CORS middleware so we can make requests across origins
 app.use(compression()); // Use gzip/deflate compression middleware
 
 // Set up our passport authentication middleware
+
 passport.use(authenticate.strategy());
 app.use(passport.initialize());
 

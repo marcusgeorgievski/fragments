@@ -9,6 +9,8 @@ module.exports = async (req, res) => {
   const { type } = contentType.parse(req.get('Content-Type'));
   const size = Number(req.headers['content-length']);
 
+  logger.debug({ ownerId, type, size }, 'Creating a new fragment');
+
   try {
     const isSupportedType = Fragment.isSupportedType(type);
 
@@ -32,6 +34,7 @@ module.exports = async (req, res) => {
     logger.info(`Created new fragment for ownerId ${ownerId} with fragment ID ${fragment.id}`);
 
     const hostUrl = `${req.secure ? `https://` : `http://`}${req.headers.host}`;
+    logger.debug({ hostUrl }, 'Host URL');
 
     res.set({ Location: `${hostUrl}/v1/fragments/${fragment.id}` });
     res.status(201).json(createSuccessResponse({ fragment }));

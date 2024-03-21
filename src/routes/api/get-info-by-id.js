@@ -7,10 +7,13 @@ module.exports = async (req, res) => {
   const fragmentId = req.params.id;
   const ownerId = req.user;
 
+  logger.debug({ ownerId, fragmentId }, 'Fetching fragment info by ID');
+
   try {
     const fragment = await Fragment.byId(ownerId, fragmentId);
 
     logger.info(`Fetched fragment for ownerId ${ownerId} and fragment ID ${fragmentId}`);
+    logger.debug({ fragment }, 'Fragment');
 
     res.status(200).send(
       createSuccessResponse({

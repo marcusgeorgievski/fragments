@@ -5,24 +5,28 @@ const { createErrorResponse } = require('../../response');
 
 // Get a fragment by id
 module.exports = async (req, res) => {
-  // TODO: supported type conversion (415 err)
   const paramId = req.params.id;
   const ownerId = req.user;
   const [fragmentId, ext] = paramId.split('.');
+
+  logger.debug({ paramId, ownerId, fragmentId, ext }, 'Fetching fragment by ID');
 
   try {
     const fragment = await Fragment.byId(ownerId, fragmentId);
     const fragmentData = await fragment.getData();
 
     logger.info(`Fetched fragment for ownerId ${ownerId} and fragment ID ${fragmentId}`);
+    logger.debug({ fragmentData }, 'Fragment');
 
     // Extension provided, convert if possible
     if (ext !== undefined) {
       const convertedData = convertFragment(fragmentData.toString(), fragment, ext);
+      const convertedBuffer = Buffer.from(convertedData);
 
       logger.info(`Converted ${fragment.mimeType} to ${extToType[ext]}`);
+      logger.debug({ convertedData }, 'Converted fragment');
+
       res.set({ 'Content-Type': extToType[ext] });
-      const convertedBuffer = Buffer.from(convertedData);
       res.status(200).send(convertedBuffer);
       return;
     }
@@ -50,17 +54,19 @@ const extToType = {
 
 function convertFragment(fragmentData, fragment, ext) {
   const extType = extToType[ext]; // ext -> mime/type
-  const validTypes = fragment.formats;
+  const validTypes = fragment.formats; // array of fragment's valid types
   const fragmentType = fragment.mimeType;
 
+  // Check if the requested type is valid
   if (!validTypes.includes(extType)) {
     const error = new Error(`Cannot convert fragment to ${extType}`);
-    error.status = 415;
+    error.status = 415; // Unsupported Media Type
     throw error;
   }
 
   let convertedData;
 
+  // Convert the fragment to the requested type
   switch (fragmentType) {
     case 'text/markdown':
       if (extType === 'text/html') {
