@@ -1,17 +1,12 @@
 const request = require('supertest');
 const app = require('../../src/app');
 const contentType = require('content-type');
+const { postFragment } = require('../utils');
 
 describe('GET /v1/fragments/:id', () => {
   test('user can create fragment then get by id', async () => {
     const data = Buffer.from('Hello');
-
-    const postRes = await request(app)
-      .post('/v1/fragments')
-      .auth('user1@email.com', 'password1')
-      .send(data)
-      .set('Content-Type', 'text/plain')
-      .set('Content-Length', data.length);
+    const postRes = await postFragment(data, 'text/plain');
 
     const result = postRes.body.fragment;
 
@@ -25,12 +20,7 @@ describe('GET /v1/fragments/:id', () => {
   test('Correct status code and content type returned', async () => {
     const data = Buffer.from('Hello');
 
-    const postRes = await request(app)
-      .post('/v1/fragments')
-      .auth('user1@email.com', 'password1')
-      .send(data)
-      .set('Content-Type', 'text/plain')
-      .set('Content-Length', data.length);
+    const postRes = await postFragment(data, 'text/plain');
 
     const result = postRes.body.fragment;
 
@@ -45,14 +35,7 @@ describe('GET /v1/fragments/:id', () => {
   });
 
   test('unknown fragment returns HTTP 404', async () => {
-    await request(app)
-      .post('/v1/fragments')
-      .auth('user1@email.com', 'password1')
-      .send('hello')
-      .set('Content-Type', 'text/plain')
-      .set('Content-Length', 'hello'.length);
-
-    // const postFragment = postRes.body.fragment;
+    await postFragment('Hello', 'text/plain');
 
     const getExpandedRes = await request(app)
       .get(`/v1/fragments/BAD-ID`)
@@ -64,17 +47,12 @@ describe('GET /v1/fragments/:id', () => {
   test('create fragment of markdown type', async () => {
     const data = '## hello';
 
-    const postRes = await request(app)
-      .post('/v1/fragments')
-      .auth('user1@email.com', 'password1')
-      .send(data)
-      .set('Content-Type', 'text/markdown')
-      .set('Content-Length', data.length);
+    const postRes = await postFragment(data, 'text/markdown');
 
-    const postFragment = postRes.body.fragment;
+    const fragment = postRes.body.fragment;
 
     const getRes = await request(app)
-      .get(`/v1/fragments/${postFragment.id}`)
+      .get(`/v1/fragments/${fragment.id}`)
       .auth('user1@email.com', 'password1');
 
     expect(getRes.status).toBe(200);
@@ -83,17 +61,12 @@ describe('GET /v1/fragments/:id', () => {
   test('valid markdown to html conversion', async () => {
     const data = '## hello';
 
-    const postRes = await request(app)
-      .post('/v1/fragments')
-      .auth('user1@email.com', 'password1')
-      .send(data)
-      .set('Content-Type', 'text/markdown')
-      .set('Content-Length', data.length);
+    const postRes = await postFragment(data, 'text/markdown');
 
-    const postFragment = postRes.body.fragment;
+    const fragment = postRes.body.fragment;
 
     const getRes = await request(app)
-      .get(`/v1/fragments/${postFragment.id}.html`)
+      .get(`/v1/fragments/${fragment.id}.html`)
       .auth('user1@email.com', 'password1');
 
     expect(getRes.text).toBe('<h2>hello</h2>\n');
@@ -103,17 +76,12 @@ describe('GET /v1/fragments/:id', () => {
   test('invalid markdown to jpeg conversion results in 415', async () => {
     const data = '## hello';
 
-    const postRes = await request(app)
-      .post('/v1/fragments')
-      .auth('user1@email.com', 'password1')
-      .send(data)
-      .set('Content-Type', 'text/markdown')
-      .set('Content-Length', data.length);
+    const postRes = await postFragment(data, 'text/markdown');
 
-    const postFragment = postRes.body.fragment;
+    const fragment = postRes.body.fragment;
 
     const getRes = await request(app)
-      .get(`/v1/fragments/${postFragment.id}.jpg`)
+      .get(`/v1/fragments/${fragment.id}.jpg`)
       .auth('user1@email.com', 'password1');
 
     expect(getRes.status).toBe(415);
