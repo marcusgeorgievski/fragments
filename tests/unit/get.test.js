@@ -1,5 +1,6 @@
 const request = require('supertest');
 const app = require('../../src/app');
+const { postFragment } = require('../utils');
 
 describe('GET /v1/fragments', () => {
   // If the request is missing the Authorization header, it should be forbidden
@@ -18,12 +19,7 @@ describe('GET /v1/fragments', () => {
   });
 
   test('authenticated users get a fragments array of size 2 after 2 post reqs', async () => {
-    await request(app)
-      .post('/v1/fragments')
-      .auth('user1@email.com', 'password1')
-      .send('hello')
-      .set('Content-Type', 'text/plain')
-      .set('Content-Length', 'hello'.length);
+    await postFragment('hello', 'text/plain');
 
     await request(app)
       .post('/v1/fragments')
@@ -32,17 +28,12 @@ describe('GET /v1/fragments', () => {
       .set('Content-Type', 'text/plain')
       .set('Content-Length', 'hello2'.length);
 
-    const res2 = await request(app).get('/v1/fragments').auth('user1@email.com', 'password1');
-    expect(res2.body.fragments.length).toBe(2);
+    const getRes = await request(app).get('/v1/fragments').auth('user1@email.com', 'password1');
+    expect(getRes.body.fragments.length).toBe(2);
   });
 
   test('expand has additional keys ', async () => {
-    await request(app)
-      .post('/v1/fragments')
-      .auth('user1@email.com', 'password1')
-      .send('hello')
-      .set('Content-Type', 'text/plain')
-      .set('Content-Length', 'hello'.length);
+    await postFragment('hello', 'text/plain');
 
     const getExpandedRes = await request(app)
       .get(`/v1/fragments`)
@@ -59,6 +50,4 @@ describe('GET /v1/fragments', () => {
     expect('type' in fragment).toBe(true);
     expect('id' in fragment).toBe(true);
   });
-
-  // TODO: we'll need to add tests to check the contents of the fragments array later
 });

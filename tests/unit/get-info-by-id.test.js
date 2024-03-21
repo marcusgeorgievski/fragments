@@ -4,58 +4,46 @@ const { postFragment } = require('../utils');
 
 describe('GET /v1/fragments/:id/info', () => {
   test('user can create fragment, get it, and have the same id', async () => {
-    const text = 'Hello';
-
-    const data = Buffer.from(text);
+    const data = Buffer.from('hello');
 
     const postReq = await postFragment(data, 'text/plain');
 
-    const postResult = postReq.body.fragment;
+    const fragment = postReq.body.fragment;
 
     const getRes = await request(app)
-      .get('/v1/fragments/' + postResult.id + '/info')
+      .get('/v1/fragments/' + fragment.id + '/info')
       .auth('user1@email.com', 'password1');
 
     const getResult = getRes.body.fragment;
 
-    expect(getResult.id).toBe(postResult.id);
+    expect(getResult.id).toBe(fragment.id);
     expect(getRes.status).toBe(200);
   });
 
   test('info has proper keys', async () => {
-    const postRes = await request(app)
-      .post('/v1/fragments')
-      .auth('user1@email.com', 'password1')
-      .send('hello')
-      .set('Content-Type', 'text/plain')
-      .set('Content-Length', 'hello'.length);
+    const postRes = await postFragment('hello', 'text/plain');
 
-    const postFragment = postRes.body.fragment;
+    const fragment = postRes.body.fragment;
 
     const getExpandedRes = await request(app)
-      .get(`/v1/fragments/${postFragment.id}/info`)
+      .get(`/v1/fragments/${fragment.id}/info`)
       .auth('user1@email.com', 'password1');
 
-    const fragment = getExpandedRes.body.fragment;
+    const getFragment = getExpandedRes.body.fragment;
 
     expect('fragment' in getExpandedRes.body).toBe(true);
 
     // Ensure the expanded fragment has the correct keys
-    expect('ownerId' in fragment).toBe(true);
-    expect('created' in fragment).toBe(true);
-    expect('updated' in fragment).toBe(true);
-    expect('size' in fragment).toBe(true);
-    expect('type' in fragment).toBe(true);
-    expect('id' in fragment).toBe(true);
+    expect('ownerId' in getFragment).toBe(true);
+    expect('created' in getFragment).toBe(true);
+    expect('updated' in getFragment).toBe(true);
+    expect('size' in getFragment).toBe(true);
+    expect('type' in getFragment).toBe(true);
+    expect('id' in getFragment).toBe(true);
   });
 
   test('unknown fragment returns HTTP 404', async () => {
-    await request(app)
-      .post('/v1/fragments')
-      .auth('user1@email.com', 'password1')
-      .send('hello')
-      .set('Content-Type', 'text/plain')
-      .set('Content-Length', 'hello'.length);
+    await postFragment('hello', 'text/plain');
 
     // const postFragment = postRes.body.fragment;
 
