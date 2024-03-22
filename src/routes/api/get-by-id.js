@@ -16,7 +16,7 @@ module.exports = async (req, res) => {
     const fragmentData = await fragment.getData();
 
     logger.info(`Fetched fragment for ownerId ${ownerId} and fragment ID ${fragmentId}`);
-    logger.debug({ fragmentData }, 'Fragment');
+    logger.debug({ fragmentData, fragment }, 'Fragment info');
 
     // Extension provided, convert if possible
     if (ext !== undefined) {
@@ -26,12 +26,12 @@ module.exports = async (req, res) => {
       logger.info(`Converted ${fragment.mimeType} to ${extToType[ext]}`);
       logger.debug({ convertedData }, 'Converted fragment');
 
-      res.set({ 'Content-Type': extToType[ext] });
+      res.setHeader('Content-Type', extToType[ext]);
       res.status(200).send(convertedBuffer);
       return;
     }
 
-    res.set({ 'Content-Type': fragment.type });
+    res.setHeader('Content-Type', fragment.type);
     res.status(200).send(fragmentData);
   } catch (error) {
     logger.error(`Failed to fetch fragment for ownerId: ${ownerId} and fragment ID: ${fragmentId}`);

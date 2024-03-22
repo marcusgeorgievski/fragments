@@ -36,7 +36,7 @@ module.exports = async (req, res) => {
     const hostUrl = `${req.secure ? `https://` : `http://`}${req.headers.host}`;
     logger.debug({ hostUrl }, 'Host URL');
 
-    res.set({ Location: `${hostUrl}/v1/fragments/${fragment.id}` });
+    res.setHeader('Location', `${hostUrl}/v1/fragments/${fragment.id}`);
     res.status(201).json(createSuccessResponse({ fragment }));
   } catch (error) {
     logger.error('Error creating a new fragment ', error);
