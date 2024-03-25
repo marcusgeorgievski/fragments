@@ -25,9 +25,13 @@ const rawBody = () =>
 // Use a raw body parser for POST, which will give a `Buffer` Object or `{}` at `req.body`
 // You can use Buffer.isBuffer(req.body) to test if it was parsed by the raw body parser.
 router.get('/fragments', require('./get'));
-router.get('/fragments/:id/info', require('./get-info-by-id'));
-router.get('/fragments/:id', require('./get-by-id'));
 router.post('/fragments', rawBody(), require('./post'));
+
+router.get('/fragments/:id', require('./get-by-id'));
+router.delete('/fragments/:id', require('./delete'));
+// router.put('/fragments/:id', require('./get-by-id'));
+
+router.get('/fragments/:id/info', require('./get-info-by-id'));
 
 // Other routes (POST, DELETE, etc.) will go here later on...
 
