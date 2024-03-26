@@ -8,6 +8,8 @@ const logger = require('../../../logger');
 // const data = new MemoryDB();
 const metadata = new MemoryDB();
 
+logger.info('Configured to use AWS S3 for data storage');
+
 // Write a fragment's metadata to memory db. Returns a Promise
 function writeFragment(fragment) {
   return metadata.put(fragment.ownerId, fragment.id, fragment);
