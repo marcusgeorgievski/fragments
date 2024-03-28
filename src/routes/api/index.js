@@ -28,11 +28,9 @@ router.get('/fragments', require('./get'));
 router.post('/fragments', rawBody(), require('./post'));
 
 router.get('/fragments/:id', require('./get-by-id'));
+router.put('/fragments/:id', rawBody(), require('./put'));
 router.delete('/fragments/:id', require('./delete'));
-// router.put('/fragments/:id', require('./get-by-id'));
 
 router.get('/fragments/:id/info', require('./get-info-by-id'));
-
-// Other routes (POST, DELETE, etc.) will go here later on...
 
 module.exports = router;
