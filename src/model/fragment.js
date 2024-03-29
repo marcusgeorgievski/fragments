@@ -56,7 +56,7 @@ class Fragment {
       const fragments = await listFragments(ownerId, expand);
       return fragments;
     } catch (error) {
-      throw new Error(`Error finding fragments byUser for ownerId=${ownerId}: ${error.message}`);
+      throw new Error(`Error finding fragments byUser for ownerId ${ownerId}: ${error.message}`);
     }
   }
 

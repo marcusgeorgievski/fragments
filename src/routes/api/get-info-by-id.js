@@ -1,9 +1,11 @@
 const { Fragment } = require('../../model/fragment');
-const { createSuccessResponse, createErrorResponse } = require('../../response');
+const { createSuccessResponse } = require('../../response');
 const logger = require('../../logger');
+const { ApplicationError } = require('../../model/app-error');
+// const { ApplicationError } = require('../../model/app-error');
 
 // Get a fragment by id
-module.exports = async (req, res) => {
+module.exports = async (req, res, next) => {
   const fragmentId = req.params.id;
   const ownerId = req.user;
 
@@ -20,8 +22,13 @@ module.exports = async (req, res) => {
         fragment,
       })
     );
-  } catch (error) {
-    logger.error(`Failed to fetch fragment for ownerId: ${ownerId} and fragment ID: ${fragmentId}`);
-    res.status(404).json(createErrorResponse(404, error.message));
+  } catch (err) {
+    logger.error(`Failed to fetch fragment for ownerId ${ownerId} and fragment ID ${fragmentId}`);
+    next(
+      new ApplicationError(
+        404,
+        `Failed to fetch fragment for ownerId ${ownerId} and fragment ID ${fragmentId}`
+      )
+    );
   }
 };

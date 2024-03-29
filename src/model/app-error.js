@@ -1,19 +1,18 @@
 /**
- * Represents an error related to fragment operations.
+ * Represents an error related to the service's operations.
  * @class
  * @extends Error
  */
-class FragmentsError extends Error {
+class ApplicationError extends Error {
   /**
-   * Creates an instance of FragmentsError.
+   * Creates an instance of ApplicationError.
    * @param {number} status - The HTTP status code related to the error.
    * @param {string} message - The error message.
    */
   constructor(status, message) {
     super(message);
     this.status = status;
-    this.name = this.constructor.name;
   }
 }
 
-module.exports.FragmentsError = FragmentsError;
+module.exports.ApplicationError = ApplicationError;

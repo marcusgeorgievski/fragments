@@ -1,10 +1,11 @@
-const { createSuccessResponse, createErrorResponse } = require('../../response');
+const { createSuccessResponse } = require('../../response');
 const logger = require('../../logger');
 const { Fragment } = require('../../model/fragment');
 var contentType = require('content-type');
+const { ApplicationError } = require('../../model/app-error');
 
 // Create a new fragment for the current user
-module.exports = async (req, res) => {
+module.exports = async (req, res, next) => {
   const ownerId = req.user;
   const { type } = contentType.parse(req.get('Content-Type'));
   const size = Number(req.headers['content-length']);
@@ -14,12 +15,10 @@ module.exports = async (req, res) => {
   try {
     const isSupportedType = Fragment.isSupportedType(type);
 
-    // Disallow unsupported types
+    // 415 - Disallow unsupported types
     if (!isSupportedType) {
       logger.error('Unsupported type:', type);
-      const error = new Error(`Unsupported type: ${type}`);
-      error.status = 415;
-      throw error;
+      throw new ApplicationError(415, `Unsupported type: ${type}`);
     }
 
     const fragment = new Fragment({
@@ -38,8 +37,8 @@ module.exports = async (req, res) => {
 
     res.setHeader('Location', `${hostUrl}/v1/fragments/${fragment.id}`);
     res.status(201).json(createSuccessResponse({ fragment }));
-  } catch (error) {
-    logger.error('Error creating a new fragment ', error);
-    res.status(error.status || 500).json(createErrorResponse(error.status || 500, error.message));
+  } catch (err) {
+    logger.error({ err }, 'Error creating a new fragment');
+    next(err);
   }
 };

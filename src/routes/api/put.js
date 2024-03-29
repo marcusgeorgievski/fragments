@@ -2,6 +2,7 @@
 // const logger = require('../../logger');
 // const { Fragment } = require('../../model/fragment');
 // var contentType = require('content-type');
+// const { ApplicationError } = require('../../model/app-error');
 
 // // UPDATE an existing fragment
 // module.exports = async (req, res) => {

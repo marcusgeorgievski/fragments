@@ -1,10 +1,10 @@
 const { Fragment } = require('../../model/fragment');
 const logger = require('../../logger');
 const MarkdownIt = require('markdown-it');
-const { createErrorResponse } = require('../../response');
+const { ApplicationError } = require('../../model/app-error');
 
 // Get a fragment by id
-module.exports = async (req, res) => {
+module.exports = async (req, res, next) => {
   const paramId = req.params.id;
   const ownerId = req.user;
   const [fragmentId, ext] = paramId.split('.');
@@ -33,9 +33,14 @@ module.exports = async (req, res) => {
 
     res.setHeader('Content-Type', fragment.type);
     res.status(200).send(fragmentData);
-  } catch (error) {
-    logger.error(`Failed to fetch fragment for ownerId: ${ownerId} and fragment ID: ${fragmentId}`);
-    res.status(error.status || 404).json(createErrorResponse(error.status || 404, error.message));
+  } catch (err) {
+    logger.error(`Failed to fetch fragment for ownerId ${ownerId} and fragment ID ${fragmentId}`);
+    next(
+      new ApplicationError(
+        err.status || 404,
+        `Failed to fetch fragment for ownerId ${ownerId} and fragment ID ${fragmentId}`
+      )
+    );
   }
 };
 
@@ -59,9 +64,7 @@ function convertFragment(fragmentData, fragment, ext) {
 
   // Check if the requested type is valid
   if (!validTypes.includes(extType)) {
-    const error = new Error(`Cannot convert fragment to ${extType}`);
-    error.status = 415; // Unsupported Media Type
-    throw error;
+    throw new ApplicationError(415, `Cannot convert fragment to ${extType}`);
   }
 
   let convertedData;

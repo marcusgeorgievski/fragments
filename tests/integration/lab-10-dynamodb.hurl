@@ -106,7 +106,7 @@ HTTP/1.1 404
 [Asserts]
 jsonpath "$.status" == "error"
 jsonpath "$.error.code" == 404
-jsonpath "$.error.message" contains "Error fetching fragment byId for ownerId={{owner_id}} and id={{fragment1_id}}"
+jsonpath "$.error.message" contains "Failed to fetch fragment for ownerId {{owner_id}} and fragment ID {{fragment1_id}}"
 
 # 12. Get all fragments, confirm only second fragment is present
 
