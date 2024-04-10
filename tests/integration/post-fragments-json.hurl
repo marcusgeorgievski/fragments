@@ -13,7 +13,6 @@ user1@email.com: password1
 HTTP/1.1 201
 [Asserts]
 jsonpath "$.status" == "ok"
-jsonpath "$.status" == "ok"
 jsonpath "$.fragment.type" == "application/json"
 
 header "Location" matches "^http:\/\/localhost:8080\/v1\/fragments\/[A-Za-z0-9_-]+$"
