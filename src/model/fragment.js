@@ -78,9 +78,7 @@ class Fragment {
       return new Fragment(fragmentMetadata);
     } catch (error) {
       // Rethrow with error message
-      throw new Error(
-        `Error fetching fragment byId for ownerId=${ownerId} and id=${id}: ${error.message}`
-      );
+      throw new Error(`Error fetching fragment byId for ownerId=${ownerId} and id=${id}`);
     }
   }
 

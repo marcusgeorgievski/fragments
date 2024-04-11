@@ -27,8 +27,8 @@ user1@email.com: password1
 HTTP/1.1 400
 [Asserts]
 jsonpath "$.status" == "error"
-# jsonpath "$.error.code" == 400
-# jsonpath "$.error.message" == "New type does not match existing type: text/csv"
+jsonpath "$.error.code" == 400
+jsonpath "$.error.message" == "New type does not match existing type: text/html"
 
 # Update fragment with different type
 
@@ -41,5 +41,5 @@ user1@email.com: password1
 HTTP/1.1 404
 [Asserts]
 jsonpath "$.status" == "error"
-# jsonpath "$.error.code" == 404
-# jsonpath "$.error.message" includes "Error fetching fragment byId for ownerID"
+jsonpath "$.error.code" == 404
+jsonpath "$.error.message" startsWith "Error fetching fragment byId"

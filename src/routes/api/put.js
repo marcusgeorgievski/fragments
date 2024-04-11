@@ -2,7 +2,7 @@ const { createSuccessResponse, createErrorResponse } = require('../../response')
 const logger = require('../../logger');
 const { Fragment } = require('../../model/fragment');
 var contentType = require('content-type');
-// const { ApplicationError } = require('../../model/app-error');
+const { ApplicationError } = require('../../model/app-error');
 
 // UPDATE an existing fragment
 module.exports = async (req, res) => {
@@ -20,19 +20,22 @@ module.exports = async (req, res) => {
     // Type must be same as original
     if (!isMatchingType) {
       logger.error('New type does not match existing type:', type);
-      const error = new Error(`New type does not match existing type: ${type}`);
-      error.status = 400;
-      throw error;
+      throw new ApplicationError(400, `New type does not match existing type: ${type}`);
     }
 
     await originalFragment.setData(req.body);
-    // await originalFragment.save();
 
     logger.info(`Updated fragment for ownerId ${ownerId} with fragment ID ${originalFragment.id}`);
 
     res.status(200).json(createSuccessResponse({ fragment: originalFragment }));
-  } catch (error) {
-    logger.error('Error updating fragment ', error);
-    res.status(error.status || 404).json(createErrorResponse(error.status || 404, error.message));
+  } catch (err) {
+    logger.error('Error updating fragment ', err.message);
+    res.status(err.status || 404).json(createErrorResponse(err.status || 404, err.message));
+    // next(
+    //   new ApplicationError(
+    //     err.status || 404,
+    //     err.message || `New type does not match existing type: ${type}`
+    //   )
+    // );
   }
 };
