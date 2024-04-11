@@ -38,7 +38,7 @@ describe('business logic', () => {
     expect(await readFragment('a', '2')).toEqual(fragment);
   });
 
-  test('readFragment() returns non-existant fragment as undefined', async () => {
+  test('readFragment() returns non-existent fragment as undefined', async () => {
     expect(await readFragment('zz', 'b')).toEqual(undefined);
   });
 
@@ -47,7 +47,7 @@ describe('business logic', () => {
     expect(await readFragmentData('a', '2')).toEqual(Buffer.from([1, 2, 3, 4]));
   });
 
-  test('listFragments() for non-existant user returns empty array', async () => {
+  test('listFragments() for non-existent user returns empty array', async () => {
     expect(await listFragments('user123')).toEqual([]);
   });
 

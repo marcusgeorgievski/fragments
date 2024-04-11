@@ -6,7 +6,7 @@ const app = require('../../src/app');
 // Get the version and author from our package.json
 const { version, author } = require('../../package.json');
 
-describe('/ health check', () => {
+describe('health check: GET /', () => {
   test('should return HTTP 200 response', async () => {
     const res = await request(app).get('/');
     expect(res.statusCode).toBe(200);
