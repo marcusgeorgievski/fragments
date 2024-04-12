@@ -3,6 +3,9 @@ const app = require('../../src/app');
 const contentType = require('content-type');
 const { postFragment } = require('../utils');
 
+// const username = 'user1@email.com';
+// const password = 'password1';
+
 describe('GET /v1/fragments/:id', () => {
   test('user can create fragment then get by id', async () => {
     const data = Buffer.from('Hello');
@@ -86,4 +89,18 @@ describe('GET /v1/fragments/:id', () => {
 
     expect(getRes.status).toBe(415);
   });
+
+  // CONVERSIONS ------------------------------------------
+
+  // TEXT/PLAIN -> TEXT/PLAIN
+  // test('text/plain to text/plain conversion', async () => {
+  //   const data = 'Hello';
+  //   const postRes = await postFragment(data, 'text/plain');
+  //   const fragment = postRes.body.fragment;
+  //   const getRes = await request(app)
+  //     .get(`/v1/fragments/${fragment.id}.txt`)
+  //     .auth(username, password);
+
+  //   expect(getRes.text).toBe('Hello');
+  // });
 });

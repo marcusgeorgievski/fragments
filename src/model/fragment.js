@@ -215,15 +215,12 @@ class Fragment {
       `text/html`,
       `text/csv`,
       `application/json`,
-      /*
-       Currently, only text/plain is supported. Others will be added later.
 
       `image/png`,
       `image/jpeg`,
       `image/webp`,
       `image/avif`,
       `image/gif`,
-      */
     ];
 
     // Extract the media type

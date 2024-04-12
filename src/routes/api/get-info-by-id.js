@@ -2,7 +2,6 @@ const { Fragment } = require('../../model/fragment');
 const { createSuccessResponse } = require('../../response');
 const logger = require('../../logger');
 const { ApplicationError } = require('../../model/app-error');
-// const { ApplicationError } = require('../../model/app-error');
 
 // Get a fragment by id
 module.exports = async (req, res, next) => {

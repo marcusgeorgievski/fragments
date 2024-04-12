@@ -2,6 +2,8 @@ const { Fragment } = require('../../model/fragment');
 const logger = require('../../logger');
 const MarkdownIt = require('markdown-it');
 const { ApplicationError } = require('../../model/app-error');
+const { htmlToText } = require('html-to-text');
+const sharp = require('sharp');
 
 // Get a fragment by id
 module.exports = async (req, res, next) => {
@@ -16,18 +18,18 @@ module.exports = async (req, res, next) => {
     const fragmentData = await fragment.getData();
 
     logger.info(`Fetched fragment for ownerId ${ownerId} and fragment ID ${fragmentId}`);
-    logger.debug({ fragmentData, fragment }, 'Fragment info');
+    // logger.debug({ fragmentData, fragment }, 'Fragment info');
 
     // Extension provided, convert if possible
     if (ext !== undefined) {
-      const convertedData = convertFragment(fragmentData.toString(), fragment, ext);
-      const convertedBuffer = Buffer.from(convertedData);
+      const convertedData = await convertFragment(fragmentData, fragment, ext);
+      // const convertedBuffer = Buffer.from(convertedData);
 
-      logger.info(`Converted ${fragment.mimeType} to ${extToType[ext]}`);
-      logger.debug({ convertedData }, 'Converted fragment');
+      logger.debug(`Converted ${fragment.mimeType} to ${extToType[ext]}`);
+      // logger.debug({ convertedData }, 'Converted fragment');
 
       res.setHeader('Content-Type', extToType[ext]);
-      res.status(200).send(convertedBuffer);
+      res.status(200).send(convertedData);
       return;
     }
 
@@ -35,6 +37,7 @@ module.exports = async (req, res, next) => {
     res.status(200).send(fragmentData);
   } catch (err) {
     logger.error(`Failed to fetch fragment for ownerId ${ownerId} and fragment ID ${fragmentId}`);
+    logger.debug({ err }, 'Error fetching fragment');
     next(
       new ApplicationError(
         err.status || 404,
@@ -57,7 +60,7 @@ const extToType = {
   avif: 'image/avif',
 };
 
-function convertFragment(fragmentData, fragment, ext) {
+async function convertFragment(fragmentData, fragment, ext) {
   const extType = extToType[ext]; // ext -> mime/type
   const validTypes = fragment.formats; // array of fragment's valid types
   const fragmentType = fragment.mimeType;
@@ -67,19 +70,51 @@ function convertFragment(fragmentData, fragment, ext) {
     throw new ApplicationError(415, `Cannot convert fragment to ${extType}`);
   }
 
-  let convertedData;
+  let convertedData = fragmentData;
 
   // Convert the fragment to the requested type
   switch (fragmentType) {
+    // TEXT/MARKDOWN
     case 'text/markdown':
       if (extType === 'text/html') {
-        const md = new MarkdownIt({
-          html: true,
-        });
-
-        convertedData = md.render(fragmentData);
+        const md = new MarkdownIt({ html: true });
+        convertedData = md.render(fragmentData.toString());
+      } else if (extType === 'text/plain') {
+        const md = new MarkdownIt({ html: true });
+        const html = md.render(fragmentData.toString());
+        convertedData = htmlToText(html);
       }
       break;
+
+    //  TEXT/HTML
+    case 'text/html':
+      if (extType === 'text/plain') {
+        convertedData = htmlToText(fragmentData.toString());
+      }
+      break;
+
+    //  TEXT/CSV
+    case 'text/csv':
+      if (extType === 'text/plain') {
+        convertedData = fragmentData.toString();
+      } else if (extType === 'application/json') {
+        convertedData = 1;
+      }
+      break;
+
+    //  APPLICATION/JSON
+    case 'application/json':
+      if (extType === 'text/plain') {
+        convertedData = JSON.stringify(fragmentData.toString());
+      }
+      break;
+  }
+
+  // IMAGE/*
+  // Convert any image to the requested type
+  if (fragmentType.startsWith('image/')) {
+    logger.debug(`Converting image from ${fragmentType} to ${extType}`);
+    convertedData = await sharp(fragmentData).toFormat(ext).toBuffer();
   }
 
   return convertedData;
