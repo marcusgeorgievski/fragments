@@ -3,7 +3,9 @@ const logger = require('../../logger');
 const MarkdownIt = require('markdown-it');
 const { ApplicationError } = require('../../model/app-error');
 const { htmlToText } = require('html-to-text');
+const { markdownToTxt } = require('markdown-to-txt');
 const sharp = require('sharp');
+const csvtojson = require('csvtojson');
 
 // Get a fragment by id
 module.exports = async (req, res, next) => {
@@ -80,9 +82,7 @@ async function convertFragment(fragmentData, fragment, ext) {
         const md = new MarkdownIt({ html: true });
         convertedData = md.render(fragmentData.toString());
       } else if (extType === 'text/plain') {
-        const md = new MarkdownIt({ html: true });
-        const html = md.render(fragmentData.toString());
-        convertedData = htmlToText(html);
+        convertedData = markdownToTxt(convertedData.toString());
       }
       break;
 
@@ -98,7 +98,11 @@ async function convertFragment(fragmentData, fragment, ext) {
       if (extType === 'text/plain') {
         convertedData = fragmentData.toString();
       } else if (extType === 'application/json') {
-        convertedData = 1;
+        await csvtojson()
+          .fromString(fragmentData.toString())
+          .then((jsonObj) => {
+            convertedData = JSON.stringify(jsonObj);
+          });
       }
       break;
 

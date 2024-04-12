@@ -3,8 +3,12 @@ const app = require('../../src/app');
 const contentType = require('content-type');
 const { postFragment } = require('../utils');
 
-// const username = 'user1@email.com';
-// const password = 'password1';
+// image handling
+const fs = require('fs');
+const path = require('path');
+
+const username = 'user1@email.com';
+const password = 'password1';
 
 describe('GET /v1/fragments/:id', () => {
   test('user can create fragment then get by id', async () => {
@@ -90,17 +94,91 @@ describe('GET /v1/fragments/:id', () => {
     expect(getRes.status).toBe(415);
   });
 
-  // CONVERSIONS ------------------------------------------
+  // ----- more conversions ------------------------------------------
 
-  // TEXT/PLAIN -> TEXT/PLAIN
-  // test('text/plain to text/plain conversion', async () => {
-  //   const data = 'Hello';
-  //   const postRes = await postFragment(data, 'text/plain');
-  //   const fragment = postRes.body.fragment;
-  //   const getRes = await request(app)
-  //     .get(`/v1/fragments/${fragment.id}.txt`)
-  //     .auth(username, password);
+  // text/markdown -> text/html
+  test('text/plain to text/plain conversion', async () => {
+    const data = '## Hello';
+    const postRes = await postFragment(data, 'text/markdown');
+    const fragment = postRes.body.fragment;
+    const getRes = await request(app)
+      .get(`/v1/fragments/${fragment.id}.txt`)
+      .auth(username, password);
 
-  //   expect(getRes.text).toBe('Hello');
-  // });
+    expect(getRes.text).toBe('Hello');
+    expect(getRes.status).toBe(200);
+  });
+
+  // text/html -> text/plain
+  test('text/html to text/plain conversion', async () => {
+    const data = '<p>Hello</p><p>Goodbye</p>';
+    const postRes = await postFragment(data, 'text/html');
+    const fragment = postRes.body.fragment;
+    const getRes = await request(app)
+      .get(`/v1/fragments/${fragment.id}.txt`)
+      .auth(username, password);
+
+    expect(getRes.text).toBe('Hello\n\nGoodbye');
+    expect(getRes.status).toBe(200);
+  });
+
+  // text/csv -> text/plain
+  test('text/csv to text/plain conversion', async () => {
+    const data = 'a,b,c\n1,2,3';
+    const postRes = await postFragment(data, 'text/csv');
+    const fragment = postRes.body.fragment;
+    const getRes = await request(app)
+      .get(`/v1/fragments/${fragment.id}.txt`)
+      .auth(username, password);
+
+    expect(getRes.text).toBe('a,b,c\n1,2,3');
+    expect(getRes.status).toBe(200);
+  });
+
+  // text/csv -> application/json
+  test('text/csv to application/json conversion', async () => {
+    const data = 'a,b,c\n1,2,3';
+    const postRes = await postFragment(data, 'text/csv');
+    const fragment = postRes.body.fragment;
+    const res = await request(app)
+      .get(`/v1/fragments/${fragment.id}.json`)
+      .auth(username, password)
+      .expect('Content-Type', 'application/json; charset=utf-8')
+      .expect(200);
+
+    expect(res.body).toEqual([{ a: '1', b: '2', c: '3' }]);
+  });
+
+  // application/json -> text/plain
+  test('application/json to text/plain conversion', async () => {
+    const data = '{"a": 1, "b": 2}';
+    const postRes = await postFragment(data, 'application/json');
+    const fragment = postRes.body.fragment;
+    const getRes = await request(app)
+      .get(`/v1/fragments/${fragment.id}.txt`)
+      .auth(username, password);
+
+    expect(getRes.text).toBe('"{\\"a\\": 1, \\"b\\": 2}"');
+    expect(getRes.status).toBe(200);
+  });
+
+  // image/png -> image/png
+  test('image/png to image/png conversion', async () => {
+    // Path to the PNG file to upload
+    const filePath = path.join(__dirname, 'test-png.png');
+
+    // Upload the PNG file
+    const postRes = await postFragment(Buffer.from(fs.readFileSync(filePath)), 'image/png');
+    const fragmentId = postRes.body.fragment.id;
+
+    expect(postRes.status).toBe(201);
+
+    // Retrieve the PNG file
+    const getRes = await request(app)
+      .get(`/v1/fragments/${fragmentId}.gif`) // Adjust the endpoint as necessary
+      .auth(username, password)
+      .expect('Content-Type', 'image/gif'); // Ensure the Content-Type is correct
+
+    expect(getRes.status).toBe(200);
+  });
 });
