@@ -20,15 +20,13 @@ module.exports = async (req, res, next) => {
     const fragmentData = await fragment.getData();
 
     logger.info(`Fetched fragment for ownerId ${ownerId} and fragment ID ${fragmentId}`);
-    // logger.debug({ fragmentData, fragment }, 'Fragment info');
+    // logger.debug({ fragmentData, fragment }, 'Fragment info'); // This can cause some trouble if the fragment is an image
 
     // Extension provided, convert if possible
     if (ext !== undefined) {
       const convertedData = await convertFragment(fragmentData, fragment, ext);
-      // const convertedBuffer = Buffer.from(convertedData);
 
       logger.debug(`Converted ${fragment.mimeType} to ${extToType[ext]}`);
-      // logger.debug({ convertedData }, 'Converted fragment');
 
       res.setHeader('Content-Type', extToType[ext]);
       res.status(200).send(convertedData);
@@ -101,7 +99,7 @@ async function convertFragment(fragmentData, fragment, ext) {
         await csvtojson()
           .fromString(fragmentData.toString())
           .then((jsonObj) => {
-            convertedData = JSON.stringify(jsonObj);
+            convertedData = jsonObj;
           });
       }
       break;

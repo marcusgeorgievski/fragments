@@ -31,11 +31,5 @@ module.exports = async (req, res) => {
   } catch (err) {
     logger.error('Error updating fragment ', err.message);
     res.status(err.status || 404).json(createErrorResponse(err.status || 404, err.message));
-    // next(
-    //   new ApplicationError(
-    //     err.status || 404,
-    //     err.message || `New type does not match existing type: ${type}`
-    //   )
-    // );
   }
 };

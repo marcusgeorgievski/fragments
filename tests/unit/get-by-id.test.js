@@ -137,7 +137,7 @@ describe('GET /v1/fragments/:id', () => {
 
   // text/csv -> application/json
   test('text/csv to application/json conversion', async () => {
-    const data = 'a,b,c\n1,2,3';
+    const data = 'a,b,c\n1,2,3\n4,5,6';
     const postRes = await postFragment(data, 'text/csv');
     const fragment = postRes.body.fragment;
     const res = await request(app)
@@ -146,7 +146,10 @@ describe('GET /v1/fragments/:id', () => {
       .expect('Content-Type', 'application/json; charset=utf-8')
       .expect(200);
 
-    expect(res.body).toEqual([{ a: '1', b: '2', c: '3' }]);
+    expect(res.body).toEqual([
+      { a: '1', b: '2', c: '3' },
+      { a: '4', b: '5', c: '6' },
+    ]);
   });
 
   // application/json -> text/plain

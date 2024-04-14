@@ -10,8 +10,8 @@ services:
       - LOG_LEVEL=${LOG_LEVEL:-debug}
       - AWS_REGION=us-east-1
 
-      # - AWS_COGNITO_POOL_ID=${AWS_COGNITO_POOL_ID:-test}
-      # - AWS_COGNITO_CLIENT_ID=${AWS_COGNITO_CLIENT_ID:-test}
+      - AWS_COGNITO_POOL_ID=${AWS_COGNITO_POOL_ID:-test}
+      - AWS_COGNITO_CLIENT_ID=${AWS_COGNITO_CLIENT_ID:-test}
 
       - AWS_S3_ENDPOINT_URL=http://localstack:4566
       - AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET_NAME:-mgeorgievski4-fragments}

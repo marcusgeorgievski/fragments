@@ -12,3 +12,4 @@ tests/
 !tests/.htpasswd 
 .git/
 minio/
+assignment-3.md
