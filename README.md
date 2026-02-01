@@ -1,6 +1,6 @@
 # fragments
 
-Cloud-based microservice for a Canadian manufacturing company to manage diverse text and image data from IoT devices, mobile apps, and cameras. This AWS-deployable service is crucial for the company's digitization efforts and future AI and machine learning projects.
+Cloud-based microservice to manage diverse text and image data.
 
 ## Table of Contents
 
@@ -10,7 +10,6 @@ Cloud-based microservice for a Canadian manufacturing company to manage diverse 
   - [Docker](#docker)
 - [Config](#config)
   - [Scripts](#scripts)
-- [Author](#author)
 - [Version History](#version-history)
 
 ## Installation
@@ -59,12 +58,6 @@ docker run --rm --name fragments --env-file .env -p 8080:8080 marcusgeorgievski/
 | `npm run test`       | `jest -c jest.config.js --runInBand --"`                                      | Run tests one-by-one                                                |
 | `npm run test:watch` | `jest -c jest.config.js --runInBand --watch --`                               | Run tests, and re-run on file changes                               |
 | `npm run coverage`   | `jest -c jest.config.js --runInBand --coverage`                               | Run tests and collect test coverage information                     |
-
-## Author
-
-👤 Marcus Georgievski \
-📧 mgeorgievski4@myseneca.ca \
-💻 [marcusgeorgievski.com](https://marcusgeorgievski.com)
 
 ## Version History
 
